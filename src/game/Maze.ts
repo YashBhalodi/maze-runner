@@ -6,10 +6,10 @@ enum WallState {
 }
 
 export enum DIRECTION {
-  LEFT,
-  RIGHT,
-  UP,
-  BOTTOM,
+  LEFT = "LEFT",
+  RIGHT = "RIGHT",
+  UP = "UP",
+  BOTTOM = "BOTTOM",
 }
 
 export interface Position {
@@ -25,9 +25,9 @@ export interface Walls {
 }
 
 export enum CellType {
-  ENTRY,
-  EXIT,
-  NORMAL,
+  ENTRY = "ENTRY",
+  EXIT = "EXIT",
+  NORMAL = "NORMAL",
 }
 
 export interface Cell {

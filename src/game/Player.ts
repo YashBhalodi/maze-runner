@@ -18,6 +18,13 @@ const directionVectorMap = {
   [DIRECTION.UP]: new Vector3(-1, 0, 0),
 };
 
+const wallDirectionMap = {
+  [DIRECTION.BOTTOM]: DIRECTION.RIGHT,
+  [DIRECTION.LEFT]: DIRECTION.BOTTOM,
+  [DIRECTION.UP]: DIRECTION.LEFT,
+  [DIRECTION.RIGHT]: DIRECTION.UP,
+};
+
 class Player {
   isReady: boolean;
   maze: MazeRenderer;
@@ -109,7 +116,25 @@ class Player {
     this.mazePosition = result;
   }
 
+  getIsPlayerBlocked(direction: DIRECTION) {
+    const wallDirection = wallDirectionMap[direction]; //TODO: this is shitty hack. Fix it.
+    const mazeGrid = this.maze.mazeData;
+    const playerPosition = this.mazePosition;
+
+    const currentCell = mazeGrid.find(
+      (cell) =>
+        cell.position.x === playerPosition.x &&
+        cell.position.y === playerPosition.y
+    );
+
+    return currentCell?.walls[wallDirection];
+  }
+
   movePlayer(direction: DIRECTION) {
+    if (this.getIsPlayerBlocked(direction)) {
+      return;
+    }
+
     const directionVector = directionVectorMap[direction];
     this.updatePlayerMazePosition(direction);
     this.playerObject.translateOnAxis(directionVector, 1);
