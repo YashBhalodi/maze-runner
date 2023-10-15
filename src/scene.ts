@@ -114,7 +114,7 @@ function init() {
   // ===== 🪄 HELPERS =====
   {
     axesHelper = new AxesHelper(4);
-    axesHelper.visible = true;
+    axesHelper.visible = false;
     scene.add(axesHelper);
   }
 
