@@ -1,13 +1,10 @@
-import GUI from "lil-gui";
 import {
   AmbientLight,
   AxesHelper,
-  GridHelper,
   LoadingManager,
   PCFSoftShadowMap,
   PerspectiveCamera,
   PointLight,
-  PointLightHelper,
   Scene,
   WebGLRenderer,
 } from "three";
@@ -15,7 +12,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Stats from "three/examples/jsm/libs/stats.module";
 import { toggleFullScreen } from "./helpers/fullscreen";
 import { resizeRendererToDisplaySize } from "./helpers/responsiveness";
-import MazeRenderer from "./game/MazeRenderer";
+
 import "./style.css";
 import Game from "./game/Game";
 
@@ -30,9 +27,7 @@ let pointLight: PointLight;
 let camera: PerspectiveCamera;
 let cameraControls: OrbitControls;
 let axesHelper: AxesHelper;
-let pointLightHelper: PointLightHelper;
 let stats: Stats;
-let gui: GUI;
 
 let game: Game;
 
@@ -119,16 +114,8 @@ function init() {
   // ===== 🪄 HELPERS =====
   {
     axesHelper = new AxesHelper(4);
-    axesHelper.visible = true;
+    axesHelper.visible = false;
     scene.add(axesHelper);
-
-    pointLightHelper = new PointLightHelper(pointLight, undefined, "orange");
-    pointLightHelper.visible = true;
-    scene.add(pointLightHelper);
-
-    const gridHelper = new GridHelper(20, 20, "teal", "darkgray");
-    gridHelper.position.y = -0.01;
-    scene.add(gridHelper);
   }
 
   // ===== 📈 STATS & CLOCK =====
