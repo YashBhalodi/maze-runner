@@ -2,12 +2,6 @@ import { Scene } from "three";
 import MazeRenderer from "./MazeRenderer";
 import Player from "./Player";
 
-interface Record {
-  level: number;
-  time: number;
-  score: number;
-}
-
 function getMazeSizeForLevel(level: number) {
   return Math.max(3, level);
 }
