@@ -1,5 +1,6 @@
 import { Scene } from "three";
 import MazeRenderer from "./MazeRenderer";
+import Player from "./Player";
 
 interface Record {
   level: number;
@@ -17,6 +18,7 @@ class Game {
   scene: Scene;
 
   isMazeRendered: boolean;
+  player: Player;
 
   constructor(scene: Scene) {
     this.currentLevel = parseInt(localStorage.getItem("level") ?? "1") ?? 1;
@@ -24,6 +26,7 @@ class Game {
     this.maze = new MazeRenderer(size, size);
     this.scene = scene;
     this.isMazeRendered = false;
+    this.player = new Player(this.maze, this.scene);
   }
 
   update() {
@@ -33,15 +36,29 @@ class Game {
       });
       return;
     }
+
+    if (!this.player.isReady) {
+      this.player.init();
+    }
+  }
+
+  incrementLevel() {
+    this.currentLevel++;
+    localStorage.setItem("level", this.currentLevel.toString());
+  }
+
+  redrawMaze() {
+    this.maze.cleanup(this.scene);
+
+    const nextSize = getMazeSizeForLevel(this.currentLevel);
+    this.maze = new MazeRenderer(nextSize, nextSize);
+
+    this.isMazeRendered = false;
   }
 
   goToNextLevel() {
-    this.currentLevel++;
-    localStorage.setItem("level", this.currentLevel.toString());
-    const nextSize = getMazeSizeForLevel(this.currentLevel);
-    this.maze.cleanup(this.scene);
-    this.maze = new MazeRenderer(nextSize, nextSize);
-    this.isMazeRendered = false;
+    this.incrementLevel();
+    this.redrawMaze();
   }
 }
 

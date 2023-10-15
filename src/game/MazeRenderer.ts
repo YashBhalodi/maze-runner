@@ -51,7 +51,7 @@ class MazeRenderer {
     const origin = new Vector3(
       cell.position.x,
       this.elevation,
-      cell.position.y
+      cell.position.y + 1
     );
 
     if (cell.walls.left) {

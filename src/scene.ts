@@ -71,8 +71,8 @@ function init() {
 
   // ===== 💡 LIGHTS =====
   {
-    ambientLight = new AmbientLight("black", 1);
-    pointLight = new PointLight("#ffdca8", 1.2, 10);
+    ambientLight = new AmbientLight("yellow", 10);
+    pointLight = new PointLight("#ffdca8", 10, 10);
     pointLight.position.set(-2, 3, 3);
     pointLight.castShadow = true;
     pointLight.shadow.radius = 4;
@@ -97,7 +97,8 @@ function init() {
       0.1,
       100
     );
-    camera.position.set(5, 5, 5);
+    camera.position.set(5, 10, 0);
+    camera.lookAt(0, 0, 0);
   }
 
   // ===== 🕹️ CONTROLS =====
