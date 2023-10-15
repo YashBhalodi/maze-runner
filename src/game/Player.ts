@@ -10,6 +10,20 @@ import {
 
 import MazeRenderer from "./MazeRenderer";
 
+enum DIRECTION {
+  LEFT,
+  RIGHT,
+  UP,
+  BOTTOM,
+}
+
+const directionVectorMap = {
+  [DIRECTION.LEFT]: new Vector3(0, 0, 1),
+  [DIRECTION.RIGHT]: new Vector3(0, 0, -1),
+  [DIRECTION.BOTTOM]: new Vector3(1, 0, 0),
+  [DIRECTION.UP]: new Vector3(-1, 0, 0),
+};
+
 class Player {
   isReady: boolean;
   maze: MazeRenderer;
@@ -26,6 +40,34 @@ class Player {
   init() {
     this.placePlayerAtEntry();
     this.isReady = true;
+    this.initKeyBinding();
+  }
+
+  initKeyBinding() {
+    document.addEventListener("keydown", (e) => this.handleKeyDownEvent(e));
+  }
+
+  clearKeyBinding() {
+    document.removeEventListener("keydown", (e) => this.handleKeyDownEvent(e));
+  }
+
+  handleKeyDownEvent(e: KeyboardEvent) {
+    switch (e.code) {
+      case "ArrowRight":
+        this.movePlayer(DIRECTION.RIGHT);
+        break;
+      case "ArrowLeft":
+        this.movePlayer(DIRECTION.LEFT);
+        break;
+      case "ArrowUp":
+        this.movePlayer(DIRECTION.UP);
+        break;
+      case "ArrowDown":
+        this.movePlayer(DIRECTION.BOTTOM);
+        break;
+      default:
+        break;
+    }
   }
 
   renderPlayer() {
@@ -46,6 +88,11 @@ class Player {
 
   setPlayerPosition(position: Vector3) {
     this.playerObject.position.set(position.x, position.y, position.z);
+  }
+
+  movePlayer(direction: DIRECTION) {
+    const directionVector = directionVectorMap[direction];
+    this.playerObject.translateOnAxis(directionVector, 1);
   }
 
   placePlayerAtEntry() {
