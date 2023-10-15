@@ -17,10 +17,16 @@ export interface Walls {
   bottom: boolean;
 }
 
+export enum CellType {
+  ENTRY,
+  EXIT,
+  NORMAL,
+}
+
 export interface Cell {
   position: Position;
   walls: Walls;
-  type: "ENTRY" | "EXIT" | "NORMAL";
+  type: CellType;
 }
 
 export interface Neighbor {
@@ -182,11 +188,11 @@ class Maze {
 
   private getCellType(cell: Position) {
     if (cell.x === this.entry.x && cell.y === this.entry.y) {
-      return "ENTRY";
+      return CellType.ENTRY;
     } else if (cell.x === this.exit.x && cell.y === this.exit.y) {
-      return "EXIT";
+      return CellType.EXIT;
     } else {
-      return "NORMAL";
+      return CellType.NORMAL;
     }
   }
 

@@ -15,8 +15,9 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Stats from "three/examples/jsm/libs/stats.module";
 import { toggleFullScreen } from "./helpers/fullscreen";
 import { resizeRendererToDisplaySize } from "./helpers/responsiveness";
-import MazeRenderer from "./helpers/MazeRenderer";
+import MazeRenderer from "./game/MazeRenderer";
 import "./style.css";
+import Game from "./game/Game";
 
 const CANVAS_ID = "scene";
 
@@ -33,7 +34,7 @@ let pointLightHelper: PointLightHelper;
 let stats: Stats;
 let gui: GUI;
 
-const maze = new MazeRenderer(20, 20);
+let game: Game;
 
 init();
 animate();
@@ -85,18 +86,18 @@ function init() {
 
   // ===== 📦 OBJECTS =====
   {
-    maze.draw(scene);
+    game = new Game(scene);
   }
 
   // ===== 🎥 CAMERA =====
   {
     camera = new PerspectiveCamera(
-      50,
+      70,
       canvas.clientWidth / canvas.clientHeight,
       0.1,
       100
     );
-    camera.position.set(0, 5, 0);
+    camera.position.set(5, 5, 5);
   }
 
   // ===== 🕹️ CONTROLS =====
@@ -175,6 +176,8 @@ function animate() {
   requestAnimationFrame(animate);
 
   stats.update();
+
+  game.update();
 
   if (resizeRendererToDisplaySize(renderer)) {
     const canvas = renderer.domElement;

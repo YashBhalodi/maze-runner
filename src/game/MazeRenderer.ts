@@ -6,7 +6,7 @@ import {
   Scene,
   Vector3,
 } from "three";
-import Maze, { Cell } from "./Maze";
+import Maze, { Cell, CellType } from "./Maze";
 
 class MazeRenderer {
   width: number;
@@ -39,6 +39,10 @@ class MazeRenderer {
     wall.scale.set(wallWidth, wallHeight, wallDepth);
     wall.position.set(position.x, position.y, position.z);
     return wall;
+  }
+
+  getCellByType(type: CellType) {
+    return this.mazeData.filter((cell) => cell.type === type);
   }
 
   getCellWalls(cell: Cell) {
@@ -96,13 +100,20 @@ class MazeRenderer {
     scene.add(this.mazeObject);
   }
 
-  drawNextCell(scene: Scene) {
-    if (this.animatedCellIndex >= this.mazeData.length) return;
+  drawNextCell(scene: Scene, onComplete?: Function) {
+    if (this.animatedCellIndex >= this.mazeData.length) {
+      onComplete?.();
+      return;
+    }
 
     const cell = this.mazeData[this.animatedCellIndex];
     this.renderCell(cell);
     this.animatedCellIndex++;
     scene.add(this.mazeObject);
+  }
+
+  cleanup(scene: Scene) {
+    scene.remove(this.mazeObject);
   }
 }
 
