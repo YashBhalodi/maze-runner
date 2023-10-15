@@ -23,6 +23,8 @@ class MazeRenderer {
 
   mazeData: Cell[];
   mazeObject: Group;
+  entryCellObject: Group;
+  exitCellObject: Group;
   private animatedCellIndex: number;
 
   constructor(width?: number, height?: number, wallSize?: number) {
@@ -31,6 +33,9 @@ class MazeRenderer {
 
     this.mazeData = new Maze(this.width, this.height).getGridData();
     this.mazeObject = new Group();
+
+    this.entryCellObject = new Group();
+    this.exitCellObject = new Group();
 
     this.wallSize = wallSize ?? 1;
 
@@ -53,9 +58,8 @@ class MazeRenderer {
     const floorWall = this.getWall(origin);
 
     floorWall.material.color = floorColor[type];
-    floorWall.position.x = floorWall.position.x + this.wallSize / 2;
-    floorWall.position.y = floorWall.position.y - this.wallSize / 2;
-    floorWall.position.z = floorWall.position.z - this.wallSize / 2;
+    floorWall.position.x = 0;
+    floorWall.position.y = -this.wallSize / 2;
 
     floorWall.rotateX(Math.PI / 2);
     return floorWall;
@@ -68,43 +72,50 @@ class MazeRenderer {
   getCellWalls(cell: Cell) {
     const cellWalls = new Group();
 
-    const origin = new Vector3(
-      cell.position.x,
-      this.wallSize / 2,
-      cell.position.y + 1
-    );
+    const halfWallSize = this.wallSize / 2;
+
+    const origin = new Vector3(cell.position.x, cell.position.y, 0);
 
     if (cell.walls.left) {
-      const leftPosition = new Vector3(0, 0, -this.wallSize / 2);
-      const cellWallPosition = leftPosition.add(origin);
-      const wallLeft = this.getWall(cellWallPosition);
+      const leftPosition = new Vector3(-halfWallSize, 0, 0);
+      const wallLeft = this.getWall(leftPosition);
       wallLeft.rotation.y = Math.PI / 2;
       cellWalls.add(wallLeft);
     }
 
     if (cell.walls.right) {
-      const rightPosition = new Vector3(1, 0, -this.wallSize / 2);
-      const cellWallPosition = rightPosition.add(origin);
-      const wallRight = this.getWall(cellWallPosition);
+      const rightPosition = new Vector3(halfWallSize, 0, 0);
+      const wallRight = this.getWall(rightPosition);
       wallRight.rotation.y = Math.PI / 2;
       cellWalls.add(wallRight);
     }
 
     if (cell.walls.up) {
-      const topPosition = new Vector3(this.wallSize / 2, 0, -1);
-      const cellWallPosition = topPosition.add(origin);
-      const wallTop = this.getWall(cellWallPosition);
+      const topPosition = new Vector3(0, 0, -halfWallSize);
+      const wallTop = this.getWall(topPosition);
       cellWalls.add(wallTop);
     }
 
     if (cell.walls.bottom) {
-      const bottomPosition = new Vector3(this.wallSize / 2, 0, 0);
-      const cellWallPosition = bottomPosition.add(origin);
-      const wallBottom = this.getWall(cellWallPosition);
+      const bottomPosition = new Vector3(0, 0, halfWallSize);
+      const wallBottom = this.getWall(bottomPosition);
       cellWalls.add(wallBottom);
     }
 
     cellWalls.add(this.getFloor(cell.type, origin));
+
+    cellWalls.position.set(
+      origin.x + halfWallSize,
+      halfWallSize,
+      origin.y + halfWallSize
+    );
+
+    if (cell.type === CellType.ENTRY) {
+      this.entryCellObject = cellWalls;
+    }
+    if (cell.type === CellType.EXIT) {
+      this.exitCellObject = cellWalls;
+    }
 
     return cellWalls;
   }
