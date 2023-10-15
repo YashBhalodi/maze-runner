@@ -90,16 +90,16 @@ class Player {
     const directionDiff = { x: 0, y: 0 };
     switch (direction) {
       case DIRECTION.LEFT:
-        directionDiff.x = 1;
-        break;
-      case DIRECTION.RIGHT:
-        directionDiff.x = -1;
-        break;
-      case DIRECTION.BOTTOM:
         directionDiff.y = 1;
         break;
-      case DIRECTION.UP:
+      case DIRECTION.RIGHT:
         directionDiff.y = -1;
+        break;
+      case DIRECTION.BOTTOM:
+        directionDiff.x = 1;
+        break;
+      case DIRECTION.UP:
+        directionDiff.x = -1;
         break;
     }
     const result = {
