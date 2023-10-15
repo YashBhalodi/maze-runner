@@ -5,16 +5,23 @@ enum WallState {
   BOTTOM = 8,
 }
 
+export enum DIRECTION {
+  LEFT,
+  RIGHT,
+  UP,
+  BOTTOM,
+}
+
 export interface Position {
   x: number;
   y: number;
 }
 
 export interface Walls {
-  left: boolean;
-  right: boolean;
-  up: boolean;
-  bottom: boolean;
+  [DIRECTION.LEFT]: boolean;
+  [DIRECTION.RIGHT]: boolean;
+  [DIRECTION.UP]: boolean;
+  [DIRECTION.BOTTOM]: boolean;
 }
 
 export enum CellType {
@@ -245,16 +252,24 @@ class Maze {
             y: j,
           },
           walls: {
-            left: (this.walls[i][j] & WallState.LEFT) !== 0,
-            right: (this.walls[i][j] & WallState.RIGHT) !== 0,
-            up: (this.walls[i][j] & WallState.UP) !== 0,
-            bottom: (this.walls[i][j] & WallState.BOTTOM) !== 0,
+            [DIRECTION.LEFT]: (this.walls[i][j] & WallState.LEFT) !== 0,
+            [DIRECTION.RIGHT]: (this.walls[i][j] & WallState.RIGHT) !== 0,
+            [DIRECTION.UP]: (this.walls[i][j] & WallState.UP) !== 0,
+            [DIRECTION.BOTTOM]: (this.walls[i][j] & WallState.BOTTOM) !== 0,
           },
           type: this.getCellType({ x: i, y: j }),
         });
       }
     }
     return gridData;
+  }
+
+  getEntryPosition() {
+    return this.entry;
+  }
+
+  getExitPosition() {
+    return this.exit;
   }
 }
 

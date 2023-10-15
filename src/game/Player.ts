@@ -9,13 +9,7 @@ import {
 } from "three";
 
 import MazeRenderer from "./MazeRenderer";
-
-enum DIRECTION {
-  LEFT,
-  RIGHT,
-  UP,
-  BOTTOM,
-}
+import { DIRECTION, Position } from "./Maze";
 
 const directionVectorMap = {
   [DIRECTION.LEFT]: new Vector3(0, 0, 1),
@@ -29,12 +23,14 @@ class Player {
   maze: MazeRenderer;
   scene: Scene;
   playerObject: Mesh;
+  mazePosition: Position;
 
   constructor(maze: MazeRenderer, scene: Scene) {
     this.isReady = false;
     this.maze = maze;
     this.scene = scene;
     this.playerObject = this.renderPlayer();
+    this.mazePosition = { x: 0, y: 0 };
   }
 
   init() {
@@ -90,13 +86,38 @@ class Player {
     this.playerObject.position.set(position.x, position.y, position.z);
   }
 
+  updatePlayerMazePosition(direction: DIRECTION) {
+    const directionDiff = { x: 0, y: 0 };
+    switch (direction) {
+      case DIRECTION.LEFT:
+        directionDiff.x = 1;
+        break;
+      case DIRECTION.RIGHT:
+        directionDiff.x = -1;
+        break;
+      case DIRECTION.BOTTOM:
+        directionDiff.y = 1;
+        break;
+      case DIRECTION.UP:
+        directionDiff.y = -1;
+        break;
+    }
+    const result = {
+      x: this.mazePosition.x + directionDiff.x,
+      y: this.mazePosition.y + directionDiff.y,
+    };
+    this.mazePosition = result;
+  }
+
   movePlayer(direction: DIRECTION) {
     const directionVector = directionVectorMap[direction];
+    this.updatePlayerMazePosition(direction);
     this.playerObject.translateOnAxis(directionVector, 1);
   }
 
   placePlayerAtEntry() {
     const playerPosition = new Vector3();
+    this.mazePosition = this.maze.maze.getEntryPosition();
     this.maze.entryCellObject.getWorldPosition(playerPosition);
     this.setPlayerPosition(playerPosition);
     this.scene.add(this.playerObject);

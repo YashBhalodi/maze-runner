@@ -7,7 +7,7 @@ import {
   Scene,
   Vector3,
 } from "three";
-import Maze, { Cell, CellType } from "./Maze";
+import Maze, { Cell, CellType, DIRECTION } from "./Maze";
 
 const floorColor = {
   [CellType.ENTRY]: new Color("#e17569"),
@@ -21,6 +21,7 @@ class MazeRenderer {
 
   wallSize: number;
 
+  maze: Maze;
   mazeData: Cell[];
   mazeObject: Group;
   entryCellObject: Group;
@@ -31,7 +32,8 @@ class MazeRenderer {
     this.width = width ?? 10;
     this.height = height ?? 10;
 
-    this.mazeData = new Maze(this.width, this.height).getGridData();
+    this.maze = new Maze(this.width, this.height);
+    this.mazeData = this.maze.getGridData();
     this.mazeObject = new Group();
 
     this.entryCellObject = new Group();
@@ -76,27 +78,27 @@ class MazeRenderer {
 
     const origin = new Vector3(cell.position.x, cell.position.y, 0);
 
-    if (cell.walls.left) {
+    if (cell.walls[DIRECTION.LEFT]) {
       const leftPosition = new Vector3(-halfWallSize, 0, 0);
       const wallLeft = this.getWall(leftPosition);
       wallLeft.rotation.y = Math.PI / 2;
       cellWalls.add(wallLeft);
     }
 
-    if (cell.walls.right) {
+    if (cell.walls[DIRECTION.RIGHT]) {
       const rightPosition = new Vector3(halfWallSize, 0, 0);
       const wallRight = this.getWall(rightPosition);
       wallRight.rotation.y = Math.PI / 2;
       cellWalls.add(wallRight);
     }
 
-    if (cell.walls.up) {
+    if (cell.walls[DIRECTION.UP]) {
       const topPosition = new Vector3(0, 0, -halfWallSize);
       const wallTop = this.getWall(topPosition);
       cellWalls.add(wallTop);
     }
 
-    if (cell.walls.bottom) {
+    if (cell.walls[DIRECTION.BOTTOM]) {
       const bottomPosition = new Vector3(0, 0, halfWallSize);
       const wallBottom = this.getWall(bottomPosition);
       cellWalls.add(wallBottom);
