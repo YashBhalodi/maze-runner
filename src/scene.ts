@@ -2,7 +2,6 @@ import GUI from "lil-gui";
 import {
   AmbientLight,
   AxesHelper,
-  Clock,
   GridHelper,
   LoadingManager,
   PCFSoftShadowMap,
@@ -31,7 +30,6 @@ let camera: PerspectiveCamera;
 let cameraControls: OrbitControls;
 let axesHelper: AxesHelper;
 let pointLightHelper: PointLightHelper;
-let clock: Clock;
 let stats: Stats;
 let gui: GUI;
 
@@ -133,7 +131,6 @@ function init() {
 
   // ===== 📈 STATS & CLOCK =====
   {
-    clock = new Clock();
     stats = new Stats();
     document.body.appendChild(stats.dom);
   }
