@@ -40,6 +40,10 @@ class Game {
     if (!this.player.isReady) {
       this.player.init();
     }
+
+    if (this.player.isAtExit) {
+      this.goToNextLevel();
+    }
   }
 
   incrementLevel() {
@@ -59,6 +63,8 @@ class Game {
   goToNextLevel() {
     this.incrementLevel();
     this.redrawMaze();
+    this.player.reset();
+    this.player = new Player(this.maze, this.scene);
   }
 }
 

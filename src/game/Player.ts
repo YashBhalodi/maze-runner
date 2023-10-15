@@ -31,6 +31,7 @@ class Player {
   scene: Scene;
   playerObject: Mesh;
   mazePosition: Position;
+  isAtExit: boolean;
 
   constructor(maze: MazeRenderer, scene: Scene) {
     this.isReady = false;
@@ -38,12 +39,21 @@ class Player {
     this.scene = scene;
     this.playerObject = this.renderPlayer();
     this.mazePosition = { x: 0, y: 0 };
+    this.isAtExit = false;
   }
 
   init() {
     this.placePlayerAtEntry();
     this.isReady = true;
     this.initKeyBinding();
+  }
+
+  reset() {
+    this.isReady = false;
+    this.scene.remove(this.playerObject);
+    this.clearKeyBinding();
+    this.isAtExit = false;
+    this.mazePosition = { x: 0, y: 0 };
   }
 
   initKeyBinding() {
@@ -138,6 +148,19 @@ class Player {
     const directionVector = directionVectorMap[direction];
     this.updatePlayerMazePosition(direction);
     this.playerObject.translateOnAxis(directionVector, 1);
+
+    this.updateIsPlayerAtExit();
+  }
+
+  updateIsPlayerAtExit() {
+    if (
+      this.mazePosition.x === this.maze.maze.getExitPosition().x &&
+      this.mazePosition.y === this.maze.maze.getExitPosition().y
+    ) {
+      this.isAtExit = true;
+    } else {
+      this.isAtExit = false;
+    }
   }
 
   placePlayerAtEntry() {
