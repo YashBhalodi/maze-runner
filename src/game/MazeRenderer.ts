@@ -1,5 +1,6 @@
 import {
   BoxGeometry,
+  Color,
   Group,
   Mesh,
   MeshStandardMaterial,
@@ -8,37 +9,56 @@ import {
 } from "three";
 import Maze, { Cell, CellType } from "./Maze";
 
+const floorColor = {
+  [CellType.ENTRY]: new Color("#e17569"),
+  [CellType.EXIT]: new Color("#88f5c8"),
+  [CellType.NORMAL]: new Color("gray"),
+};
+
 class MazeRenderer {
   width: number;
   height: number;
-  elevation: number;
+
+  wallSize: number;
+
   mazeData: Cell[];
   mazeObject: Group;
   private animatedCellIndex: number;
 
-  constructor(width?: number, height?: number, elevation?: number) {
+  constructor(width?: number, height?: number, wallSize?: number) {
     this.width = width ?? 10;
     this.height = height ?? 10;
-    this.elevation = elevation ?? 0.5;
+
     this.mazeData = new Maze(this.width, this.height).getGridData();
     this.mazeObject = new Group();
+
+    this.wallSize = wallSize ?? 1;
 
     this.animatedCellIndex = 0;
   }
 
   getWall(position: Vector3) {
-    const wallGeometry = new BoxGeometry(1, 1, 1);
+    const wallGeometry = new BoxGeometry(this.wallSize, this.wallSize, 0.05);
     const wallMaterial = new MeshStandardMaterial({ color: "white" });
-    const wallWidth = 1;
-    const wallHeight = 1;
-    const wallDepth = 0.05;
 
     const wall = new Mesh(wallGeometry, wallMaterial);
     wall.castShadow = true;
     wall.receiveShadow = true;
-    wall.scale.set(wallWidth, wallHeight, wallDepth);
+
     wall.position.set(position.x, position.y, position.z);
     return wall;
+  }
+
+  getFloor(type: CellType, origin: Vector3) {
+    const floorWall = this.getWall(origin);
+
+    floorWall.material.color = floorColor[type];
+    floorWall.position.x = floorWall.position.x + this.wallSize / 2;
+    floorWall.position.y = floorWall.position.y - this.wallSize / 2;
+    floorWall.position.z = floorWall.position.z - this.wallSize / 2;
+
+    floorWall.rotateX(Math.PI / 2);
+    return floorWall;
   }
 
   getCellByType(type: CellType) {
@@ -50,12 +70,12 @@ class MazeRenderer {
 
     const origin = new Vector3(
       cell.position.x,
-      this.elevation,
+      this.wallSize / 2,
       cell.position.y + 1
     );
 
     if (cell.walls.left) {
-      const leftPosition = new Vector3(0, 0, -this.elevation);
+      const leftPosition = new Vector3(0, 0, -this.wallSize / 2);
       const cellWallPosition = leftPosition.add(origin);
       const wallLeft = this.getWall(cellWallPosition);
       wallLeft.rotation.y = Math.PI / 2;
@@ -63,7 +83,7 @@ class MazeRenderer {
     }
 
     if (cell.walls.right) {
-      const rightPosition = new Vector3(1, 0, -this.elevation);
+      const rightPosition = new Vector3(1, 0, -this.wallSize / 2);
       const cellWallPosition = rightPosition.add(origin);
       const wallRight = this.getWall(cellWallPosition);
       wallRight.rotation.y = Math.PI / 2;
@@ -71,18 +91,20 @@ class MazeRenderer {
     }
 
     if (cell.walls.up) {
-      const topPosition = new Vector3(this.elevation, 0, -1);
+      const topPosition = new Vector3(this.wallSize / 2, 0, -1);
       const cellWallPosition = topPosition.add(origin);
       const wallTop = this.getWall(cellWallPosition);
       cellWalls.add(wallTop);
     }
 
     if (cell.walls.bottom) {
-      const bottomPosition = new Vector3(this.elevation, 0, 0);
+      const bottomPosition = new Vector3(this.wallSize / 2, 0, 0);
       const cellWallPosition = bottomPosition.add(origin);
       const wallBottom = this.getWall(cellWallPosition);
       cellWalls.add(wallBottom);
     }
+
+    cellWalls.add(this.getFloor(cell.type, origin));
 
     return cellWalls;
   }
@@ -96,7 +118,6 @@ class MazeRenderer {
       const cell = this.mazeData[i];
       this.renderCell(cell);
     }
-
     scene.add(this.mazeObject);
   }
 

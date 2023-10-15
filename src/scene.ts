@@ -71,8 +71,8 @@ function init() {
 
   // ===== 💡 LIGHTS =====
   {
-    ambientLight = new AmbientLight("yellow", 10);
-    pointLight = new PointLight("#ffdca8", 10, 10);
+    ambientLight = new AmbientLight("white", 10);
+    pointLight = new PointLight("red", 10, 10);
     pointLight.position.set(-2, 3, 3);
     pointLight.castShadow = true;
     pointLight.shadow.radius = 4;
@@ -135,41 +135,6 @@ function init() {
   {
     stats = new Stats();
     document.body.appendChild(stats.dom);
-  }
-
-  // ==== 🐞 DEBUG GUI ====
-  {
-    gui = new GUI({ title: "🐞 Debug GUI", width: 300 });
-
-    const lightsFolder = gui.addFolder("Lights");
-    lightsFolder.add(pointLight, "visible").name("point light");
-    lightsFolder.add(ambientLight, "visible").name("ambient light");
-
-    const helpersFolder = gui.addFolder("Helpers");
-    helpersFolder.add(axesHelper, "visible").name("axes");
-    helpersFolder.add(pointLightHelper, "visible").name("pointLight");
-
-    const cameraFolder = gui.addFolder("Camera");
-    cameraFolder.add(cameraControls, "autoRotate");
-
-    // persist GUI state in local storage on changes
-    gui.onFinishChange(() => {
-      const guiState = gui.save();
-      localStorage.setItem("guiState", JSON.stringify(guiState));
-    });
-
-    // load GUI state if available in local storage
-    const guiState = localStorage.getItem("guiState");
-    if (guiState) gui.load(JSON.parse(guiState));
-
-    // reset GUI state button
-    const resetGui = () => {
-      localStorage.removeItem("guiState");
-      gui.reset();
-    };
-    gui.add({ resetGui }, "resetGui").name("RESET");
-
-    gui.close();
   }
 }
 
