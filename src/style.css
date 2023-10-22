@@ -44,3 +44,23 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
+
+.scorecard {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  background-color: #99a4d4c7;
+  padding: 8px;
+  color: black;
+  border-radius: 8px 0 8px 8px;
+  text-align: left;
+}
+
+.scorecard th {
+  padding-right: 12px;
+}
+
+.scorecard td {
+  text-align: right;
+  font-weight: 800;
+}

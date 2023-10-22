@@ -1,6 +1,7 @@
 import { Scene } from "three";
 import MazeRenderer from "./MazeRenderer";
 import Player from "./Player";
+import GameRecorder from "./GameRecorder";
 
 function getMazeSizeForLevel(level: number) {
   return Math.max(3, level);
@@ -13,6 +14,7 @@ class Game {
 
   isMazeRendered: boolean;
   player: Player;
+  private gameRecorder: GameRecorder;
 
   constructor(scene: Scene) {
     this.currentLevel = parseInt(localStorage.getItem("level") ?? "1") ?? 1;
@@ -20,7 +22,8 @@ class Game {
     this.maze = new MazeRenderer(size, size);
     this.scene = scene;
     this.isMazeRendered = false;
-    this.player = new Player(this.maze, this.scene);
+    this.gameRecorder = new GameRecorder(this.currentLevel);
+    this.player = new Player(this.maze, this.scene, this.gameRecorder);
   }
 
   update() {
@@ -36,6 +39,8 @@ class Game {
     }
 
     if (this.player.isAtExit) {
+      this.gameRecorder.endLevel();
+      this.gameRecorder.saveRecord();
       this.goToNextLevel();
     }
   }
@@ -58,7 +63,8 @@ class Game {
     this.incrementLevel();
     this.redrawMaze();
     this.player.reset();
-    this.player = new Player(this.maze, this.scene);
+    this.gameRecorder = new GameRecorder(this.currentLevel);
+    this.player = new Player(this.maze, this.scene, this.gameRecorder);
   }
 }
 

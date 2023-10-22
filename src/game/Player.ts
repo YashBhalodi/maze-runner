@@ -10,6 +10,7 @@ import {
 
 import MazeRenderer from "./MazeRenderer";
 import { DIRECTION, Position } from "./Maze";
+import GameRecorder from "./GameRecorder";
 
 const directionVectorMap = {
   [DIRECTION.LEFT]: new Vector3(0, 0, 1),
@@ -29,14 +30,16 @@ class Player {
   isReady: boolean;
   maze: MazeRenderer;
   scene: Scene;
+  gameRecorder: GameRecorder;
   playerObject: Mesh;
   mazePosition: Position;
   isAtExit: boolean;
 
-  constructor(maze: MazeRenderer, scene: Scene) {
+  constructor(maze: MazeRenderer, scene: Scene, gameRecorder: GameRecorder) {
     this.isReady = false;
     this.maze = maze;
     this.scene = scene;
+    this.gameRecorder = gameRecorder;
     this.playerObject = this.renderPlayer();
     this.mazePosition = { x: 0, y: 0 };
     this.isAtExit = false;
@@ -65,6 +68,10 @@ class Player {
   }
 
   handleKeyDownEvent(e: KeyboardEvent) {
+    if (this.isReady && !this.gameRecorder.getIsTimerRunning()) {
+      this.gameRecorder.startLevel();
+    }
+
     switch (e.code) {
       case "ArrowRight":
         this.movePlayer(DIRECTION.RIGHT);
