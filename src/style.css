@@ -58,9 +58,11 @@ h1 {
 
 .scorecard th {
   padding-right: 12px;
+  color: rgb(41, 55, 70);
 }
 
 .scorecard td {
   text-align: right;
   font-weight: 800;
+  color: rgb(20, 23, 41);
 }

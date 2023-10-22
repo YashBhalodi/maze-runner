@@ -63,9 +63,9 @@ class GameRecorder {
   }
 
   render() {
-    const levelElement = document.getElementById("levelvalue");
-    const scoreElement = document.getElementById("scorevalue");
-    const durationElement = document.getElementById("durationvalue");
+    const levelElement = document.getElementById("level");
+    const scoreElement = document.getElementById("score");
+    const durationElement = document.getElementById("duration");
 
     if (levelElement) {
       levelElement.innerHTML = this.level.toString();
