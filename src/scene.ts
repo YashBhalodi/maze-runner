@@ -9,7 +9,6 @@ import {
   WebGLRenderer,
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import Stats from "three/examples/jsm/libs/stats.module";
 import { toggleFullScreen } from "./helpers/fullscreen";
 import { resizeRendererToDisplaySize } from "./helpers/responsiveness";
 
@@ -27,7 +26,6 @@ let pointLight: PointLight;
 let camera: PerspectiveCamera;
 let cameraControls: OrbitControls;
 let axesHelper: AxesHelper;
-let stats: Stats;
 
 let game: Game;
 
@@ -120,15 +118,11 @@ function init() {
 
   // ===== 📈 STATS & CLOCK =====
   {
-    stats = new Stats();
-    document.body.appendChild(stats.dom);
   }
 }
 
 function animate() {
   requestAnimationFrame(animate);
-
-  stats.update();
 
   game.update();
 
