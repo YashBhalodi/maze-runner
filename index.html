@@ -8,7 +8,7 @@
   </head>
   <body>
     <canvas id="scene"></canvas>
-    <table class="scorecard">
+    <table class="currentScoreCard">
       <thead>
         <th>Level</th>
         <td id="level">0</th>
@@ -22,6 +22,18 @@
         <td id="duration">0 seconds</th>
       </thead>
     </table>
+    <div class="scoreboardContainer" data-iscollapsed=true>
+      <h1>Score board</h1>
+      <table class="scoreboard">
+        <thead>
+          <th>Level</th>
+          <th>Score</th>
+          <th>Duration</th>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
     <script type="module" src="/src/scene.ts"></script>
   </body>
 </html>

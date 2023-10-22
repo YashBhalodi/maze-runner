@@ -20,6 +20,7 @@ class GameRecorder {
     this.timerInterval = undefined;
     this.isTimerRunnig = false;
     this.render();
+    this.renderScoreboard();
   }
 
   getCurrentTime() {
@@ -43,6 +44,7 @@ class GameRecorder {
     this.duration = this.currentTime;
     clearInterval(this.timerInterval);
     this.render();
+    this.renderScoreboard();
   }
 
   updateScore(increment: number) {
@@ -76,6 +78,31 @@ class GameRecorder {
     if (durationElement) {
       durationElement.innerHTML = this.currentTime.toString() + " seconds";
     }
+  }
+
+  renderScoreboard() {
+    const currentRecords: string = localStorage.getItem("scoreboard") ?? "[]";
+    const records: GameRecord[] = JSON.parse(currentRecords);
+
+    const tableElement = document.querySelector(".scoreboard tbody");
+
+    if (!tableElement) {
+      return;
+    }
+
+    let innerHtml = "";
+
+    records.forEach((record) => {
+      innerHtml =
+        innerHtml +
+        `<tr>
+          <td>${record.level.toString()}</td>
+          <td>${record.score.toString()}</td>
+          <td>${record.duration.toString()}</td>
+        </tr>`;
+    });
+
+    tableElement.innerHTML = innerHtml;
   }
 }
 
