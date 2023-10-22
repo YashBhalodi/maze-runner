@@ -194,9 +194,9 @@ class Maze {
   }
 
   private getCellType(cell: Position) {
-    if (cell.x === this.entry.x && cell.y === this.entry.y) {
+    if (this.isPositionEqual(cell, this.entry)) {
       return CellType.ENTRY;
-    } else if (cell.x === this.exit.x && cell.y === this.exit.y) {
+    } else if (this.isPositionEqual(cell, this.exit)) {
       return CellType.EXIT;
     } else {
       return CellType.NORMAL;
@@ -235,7 +235,10 @@ class Maze {
 
   private getRandomExitPosition(): Position {
     const exit = this.getRandomEdgePosition();
-    if (exit.x === this.entry.x && exit.y === this.entry.y) {
+    if (
+      this.isPositionEqual(exit, this.entry) ||
+      this.isPositionSameOnEdge(exit, this.entry)
+    ) {
       return this.getRandomExitPosition();
     } else {
       return exit;
@@ -270,6 +273,16 @@ class Maze {
 
   getExitPosition() {
     return this.exit;
+  }
+
+  isPositionEqual(a: Position, b: Position) {
+    return a.x === b.x && a.y === b.y;
+  }
+
+  isPositionSameOnEdge(a: Position, b: Position) {
+    const aEdge = this.getMazeEdgeWall(a);
+    const bEdge = this.getMazeEdgeWall(b);
+    return aEdge === bEdge;
   }
 }
 
