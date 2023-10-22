@@ -35,6 +35,7 @@ class MazeRenderer {
     this.maze = new Maze(this.width, this.height);
     this.mazeData = this.maze.getGridData();
     this.mazeObject = new Group();
+    this.mazeObject.position.set(-this.width / 2, 0, -this.height / 2);
 
     this.entryCellObject = new Group();
     this.exitCellObject = new Group();
