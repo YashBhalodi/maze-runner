@@ -104,7 +104,7 @@ function init() {
     // Full screen
     window.addEventListener("dblclick", (event) => {
       if (event.target === canvas) {
-        toggleFullScreen(canvas);
+        toggleFullScreen(document.body);
       }
     });
   }
