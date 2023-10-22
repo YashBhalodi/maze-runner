@@ -78,14 +78,9 @@ table {
   right: 4px;
   padding: 4px 12px;
   border-radius: 4px 4px 0px 4px;
-  background-color: #99a4d4c7;
+  background-color: #99a4d4;
   transition: all 100ms ease-in-out;
   font-size: 12px;
-}
-
-.scoreboardContainer:hover {
-  background-color: #848db4c7;
-  cursor: pointer;
 }
 
 .scoreboardContainer h1 {
@@ -110,6 +105,7 @@ table {
 
 .scoreboardContainer table thead {
   font-weight: 700;
+  background-color: #99a4d4;
   color: rgb(17, 19, 23);
   text-align: left;
   position: sticky;
